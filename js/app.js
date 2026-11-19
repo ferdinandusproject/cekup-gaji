@@ -1,4 +1,4 @@
-/* CEKUP-GAJI v3.0.0 · build 31f793123e — dibangkitkan oleh build.py dari src/js/*.js */
+/* CEKUP-GAJI v3.0.0 · build 6176c76838 — dibangkitkan oleh build.py dari src/js/*.js */
 'use strict';
 
 const $ = (s, el) => (el || document).querySelector(s);
@@ -347,7 +347,7 @@ const Theme = {
     document.documentElement.setAttribute('data-theme', t === 'gelap' ? 'dark' : 'light');
     Store.pref('pg:tema', t);
     $$('[data-act="tema"]').forEach((b) => b.classList.toggle('on', b.dataset.v === t));
-    const mt = document.querySelector('meta[name=theme-color]'); if (mt) mt.content = t === 'gelap' ? '#0E1233' : '#1A1F4D';
+    const mt = document.querySelector('meta[name=theme-color]'); if (mt) mt.content = t === 'gelap' ? '#070A1C' : '#1A1F4D';
     const tb = document.getElementById('tema-btn'); if (tb) { tb.querySelector('.ms').textContent = t === 'gelap' ? 'light_mode' : 'dark_mode'; tb.setAttribute('aria-label', t === 'gelap' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'); }
     if (simpanServer && S.token) API.call('tema.set', { tema: t }).catch(() => { });
   }
@@ -735,6 +735,8 @@ const ACT = {
   tentang: () => tentangAplikasi()
 };
 document.addEventListener('click', (e) => {
+  const ts = $('#top-search');
+  if (ts.classList.contains('open') && !e.target.closest('#top-search') && !e.target.closest('[data-act="searchToggle"]')) ts.classList.remove('open');
   const el = e.target.closest('[data-act]');
   if (Pop.cur && !e.target.closest('.pop') && !(el && Pop.cur.anchor === el)) Pop.close();
   if (!el || el.disabled) return;
@@ -757,7 +759,7 @@ document.addEventListener('focusin', (e) => { const t = e.target.closest && e.ta
 document.addEventListener('focusout', () => Tip.hide());
 document.addEventListener('keydown', (e) => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[role="button"][data-act]:not(button)')) { e.preventDefault(); e.target.click(); return; }
-  if (e.key === 'Escape') { if (Pop.cur) return Pop.close(); if (Modal.closeTop()) return; if (Drawer.cur) return Drawer.close(); }
+  if (e.key === 'Escape') { if ($('#top-search').classList.contains('open')) { $('#top-search').classList.remove('open'); $('#q-global').blur(); return; } if (Pop.cur) return Pop.close(); if (Modal.closeTop()) return; if (Drawer.cur) return Drawer.close(); }
   if (e.key === '/' && S.token && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); $('#q-global').focus(); }
 });
 $('#login-form').addEventListener('submit', doLogin);
